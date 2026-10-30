@@ -28,6 +28,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from config import MODELS_DIR, CLASS_NAMES
+from domains import INDUSTRIAL_DOMAINS
 
 # IPC-A-610 Standards Knowledge Base for Edge Reasoning
 IPC_STANDARDS_KB = {
@@ -184,43 +185,73 @@ class LlamaQualityAdvisor:
         )
         return prompt
 
-    def generate_advisory(self, inspection_record: Dict[str, Any]) -> Dict[str, Any]:
+    def generate_advisory(self, inspection_record: Dict[str, Any], domain: str = "pcb") -> Dict[str, Any]:
         """
-        Generates an evidence-grounded advisory report.
+        Generates an evidence-grounded advisory report across any industrial application domain.
+        Supported domains: 'pcb', 'steel_metal', 'textile_fabric', 'packaging', 'automotive', 'pharma'.
         If ExecuTorch .pte weights are available, runs on-device ExecuTorch inference.
-        Otherwise, executes through the deterministic IPC-A-610 expert engine.
+        Otherwise, executes through the deterministic industrial standards expert engine.
         """
         t0 = time.perf_counter()
         detections = inspection_record.get("detections", [])
         status = inspection_record.get("status", "DEFECT_FREE")
-        image_name = inspection_record.get("image_name", "pcb_sample.jpg")
+        image_name = inspection_record.get("image_name", "part_sample.jpg")
 
-        # Case 1: Defect-free board
-        if not detections:
+        domain_meta = INDUSTRIAL_DOMAINS.get(domain, INDUSTRIAL_DOMAINS["pcb"])
+        domain_name = domain_meta["name"]
+        domain_std = domain_meta["standard"]
+        domain_classes = domain_meta["classes"]
+
+        # Case 1: Defect-free part
+        defects_count = inspection_record.get("defects_found", len(detections))
+        if not detections or defects_count == 0:
             elapsed_ms = (time.perf_counter() - t0) * 1000.0
             return {
-                "engine": "ExecuTorch-Llama / IPC Rule Engine",
+                "engine": "ExecuTorch-Llama / Industrial Rule Engine",
+                "domain": domain_name,
+                "standard": domain_std,
                 "status": "PASS / DEFECT FREE",
-                "severity": "NORMAL (CLASS 1, 2, 3 COMPLIANT)",
-                "summary": "All observed conductor lines, solder pads, and hole vias conform strictly to IPC-A-610 specifications.",
-                "root_cause": "Optimal etching duration, correct stencil alignment, and verified reflow thermal profile.",
-                "rework_instructions": ["No rework required. Direct panel to secondary functional in-circuit testing (ICT)."],
+                "severity": f"NORMAL ({domain_std} COMPLIANT)",
+                "summary": f"All inspected surface regions, geometry, and features conform strictly to {domain_std} specifications.",
+                "root_cause": "Optimal process parameters, calibrated tool alignment, and controlled environment.",
+                "rework_instructions": [f"No rework required. Direct part to secondary functional testing and final packaging."],
                 "disposition": "ACCEPT / PROCEED TO TEST",
                 "report_markdown": self._render_clean_report(image_name, inspection_record),
                 "reasoning_latency_ms": round(elapsed_ms, 2)
             }
 
-        # Case 2: Defects detected - synthesize findings
-        unique_classes = list(set(d["class_name"] for d in detections))
-        primary_defect = unique_classes[0]
-        kb_info = IPC_STANDARDS_KB.get(primary_defect, {
-            "severity": "MAJOR DEFECT",
-            "ipc_reference": "IPC-A-610 General Standards",
-            "root_cause": "Manufacturing variance during PCB photolithography or assembly.",
-            "impact": "Potential circuit performance degradation.",
-            "rework_steps": ["Inspect defect under optical magnification and follow standard rework protocols."],
-            "disposition": "REWORK REQUIRED"
-        })
+        # Case 2: Defects detected - synthesize findings across domain knowledge base
+        unique_classes = []
+        for d in detections:
+            cname = d.get("class_name", d.get("type", "Surface Anomaly"))
+            if cname not in unique_classes:
+                unique_classes.append(cname)
+
+        primary_defect = unique_classes[0] if unique_classes else "surface_defect"
+
+        # Check domain-specific info
+        kb_info = None
+        for key, val in domain_classes.items():
+            if key.lower() in primary_defect.lower() or primary_defect.lower() in key.lower():
+                kb_info = {
+                    "severity": val["severity"],
+                    "ipc_reference": f"{domain_std} § {key}",
+                    "root_cause": val["root_cause"],
+                    "impact": f"Quality degradation violating {domain_std} specifications.",
+                    "rework_steps": [val["rework"]],
+                    "disposition": val["disposition"]
+                }
+                break
+
+        if not kb_info:
+            kb_info = IPC_STANDARDS_KB.get(primary_defect, {
+                "severity": f"MAJOR ANOMALY ({domain_std})",
+                "ipc_reference": domain_std,
+                "root_cause": f"Manufacturing variance during {domain_name} processing or handling.",
+                "impact": "Potential structural or functional degradation.",
+                "rework_steps": ["Inspect anomaly under optical magnification and follow standard line rework protocols."],
+                "disposition": "REWORK REQUIRED"
+            })
 
         # Check if multiple defects are present to escalate severity
         severity_label = kb_info["severity"]

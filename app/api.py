@@ -1,13 +1,13 @@
 """FastAPI REST Service for EdgeInspect AI.
 
-Provides high-throughput edge inspection and Llama advisory endpoints for
+Provides high-throughput multi-domain industrial defect inspection and Llama advisory endpoints for
 web applications, mobile apps, factory automation PLCs, and cloud microservices.
 """
 import io
 import sys
 import uuid
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from fastapi import FastAPI, File, UploadFile, Query, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,16 +20,20 @@ if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from config import CLASS_NAMES, DEFAULT_WEIGHTS, TARGETS  # noqa: E402
+from domains import INDUSTRIAL_DOMAINS  # noqa: E402
 from detect import EdgeInspector  # noqa: E402
 from advisory import LlamaQualityAdvisor  # noqa: E402
+from anomaly import IndustrialAnomalyDetector  # noqa: E402
+from logger import QualityInspectionLogger  # noqa: E402
+from hailo_adapter import HailoEdgeEngine  # noqa: E402
 
 app = FastAPI(
-    title="EdgeInspect AI — Industrial PCB Defect Inspection API",
+    title="EdgeInspect AI — Multi-Domain Industrial Defect Inspection API",
     description=(
         "High-performance offline AI inspection engine for the Arm Bharat AI-SoC Challenge 2026–27. "
-        "Integrates lightweight vision defect detection with on-device ExecuTorch Llama 3.2 advisory."
+        "Supports PCB, Steel & Metal, Textile, Packaging, Automotive, and Pharma quality inspection."
     ),
-    version="1.0.0",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -43,9 +47,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Cached singleton instances for maximum throughput
 _inspector: EdgeInspector = None
 _advisor: LlamaQualityAdvisor = None
+_anomaly_detector: IndustrialAnomalyDetector = None
+_logger: QualityInspectionLogger = None
+_hailo_engine: HailoEdgeEngine = None
 
 
 def get_inspector(conf: float = 0.25) -> EdgeInspector:
@@ -71,21 +77,44 @@ def get_advisor() -> LlamaQualityAdvisor:
     return _advisor
 
 
+def get_anomaly_detector(sensitivity: float = 0.50) -> IndustrialAnomalyDetector:
+    global _anomaly_detector
+    if _anomaly_detector is None or _anomaly_detector.sensitivity != sensitivity:
+        _anomaly_detector = IndustrialAnomalyDetector(sensitivity=sensitivity)
+    return _anomaly_detector
+
+
+def get_logger() -> QualityInspectionLogger:
+    global _logger
+    if _logger is None:
+        _logger = QualityInspectionLogger()
+    return _logger
+
+
+def get_hailo_engine() -> HailoEdgeEngine:
+    global _hailo_engine
+    if _hailo_engine is None:
+        _hailo_engine = HailoEdgeEngine()
+    return _hailo_engine
+
+
 @app.get("/", tags=["General"])
 def root_info() -> Dict[str, Any]:
     """Root metadata & service links."""
     return {
-        "service": "EdgeInspect AI Industrial Defect Detection API",
+        "service": "EdgeInspect AI Multi-Domain Industrial Inspection API",
         "challenge": "Arm Bharat AI-SoC Challenge 2026–27 (PS5)",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "documentation": "/docs",
+        "supported_domains": list(INDUSTRIAL_DOMAINS.keys()),
         "endpoints": {
+            "domains": "/api/v1/domains",
             "health": "/health",
-            "classes": "/api/v1/classes",
             "inspect": "POST /api/v1/inspect",
-            "inspect_annotated": "POST /api/v1/inspect/annotated"
+            "logs": "/api/v1/logs",
+            "hailo": "/api/v1/hailo"
         },
-        "target_hardware": "Raspberry Pi 5 (Quad-Core Arm Cortex-A76)",
+        "target_hardware": "Raspberry Pi 5 (Quad-Core Arm Cortex-A76 / Hailo-8 NPU)",
         "offline_ready": True
     }
 
@@ -99,9 +128,19 @@ def healthcheck() -> Dict[str, Any]:
         "weights_present": weights_ready,
         "weights_path": str(DEFAULT_WEIGHTS),
         "target_spec": TARGETS,
+        "supported_domains_count": len(INDUSTRIAL_DOMAINS),
         "supported_classes": CLASS_NAMES,
         "inference_device": "cpu",
         "reasoning_engine": "ExecuTorch (XNNPACK)"
+    }
+
+
+@app.get("/api/v1/domains", tags=["Industrial Domains"])
+def list_domains() -> Dict[str, Any]:
+    """List the 6 supported industrial application areas, standards, and defect types."""
+    return {
+        "count": len(INDUSTRIAL_DOMAINS),
+        "domains": INDUSTRIAL_DOMAINS
     }
 
 
@@ -118,19 +157,17 @@ def list_defect_classes() -> Dict[str, Any]:
 
 
 @app.post("/api/v1/inspect", tags=["Inspection"])
-def inspect_pcb_image(
-    file: UploadFile = File(..., description="PCB image file (JPEG or PNG)"),
-    conf: float = Query(0.25, ge=0.05, le=0.95, description="Confidence threshold"),
+def inspect_part_image(
+    file: UploadFile = File(..., description="Industrial part image file (JPEG or PNG)"),
+    domain: str = Query("pcb", description="Industrial domain: pcb, steel_metal, textile_fabric, packaging, automotive, pharma"),
+    mode: str = Query("detection", description="Inspection mode: 'detection' (YOLO) or 'anomaly' (OpenCV MVTec Heatmap)"),
+    conf: float = Query(0.25, ge=0.05, le=0.95, description="Confidence / sensitivity threshold"),
     include_advisory: bool = Query(True, description="Run Llama ExecuTorch advisory engine"),
 ) -> Dict[str, Any]:
     """
-    Execute full edge inspection on an uploaded PCB image.
-    
-    Returns:
-    - Defect localization (bounding boxes, class names, confidence scores)
-    - Latency telemetry & FPS
-    - Pass/Fail quality verdict
-    - (Optional) Full Llama 3.2 IPC-A-610 Root Cause & Rework Advisory
+    Execute full edge inspection on an uploaded industrial part image.
+    Supports all 6 industrial domains with defect localization, thermal anomaly heatmapping,
+    and Llama 3.2 ExecuTorch root cause & rework advisory.
     """
     if file.content_type not in ["image/jpeg", "image/png", "image/bmp", "application/octet-stream"]:
         raise HTTPException(
@@ -146,75 +183,96 @@ def inspect_pcb_image(
     except Exception as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid image format: {exc}")
 
-    # Save to temporary buffer for inspector
     temp_dir = PROJECT_ROOT / "reports" / "api_temp"
     temp_dir.mkdir(parents=True, exist_ok=True)
     job_id = uuid.uuid4().hex[:12]
     input_path = temp_dir / f"req_{job_id}.jpg"
     annotated_path = temp_dir / f"ann_{job_id}.jpg"
+    heatmap_path = temp_dir / f"heat_{job_id}.jpg"
 
     try:
         pil_img.save(input_path, format="JPEG", quality=95)
-        inspector = get_inspector(conf=conf)
-        vision_record = inspector.inspect_image(input_path, output_annotated_path=annotated_path)
+
+        if mode == "anomaly":
+            detector = get_anomaly_detector(sensitivity=conf)
+            record = detector.detect_anomalies(
+                input_path,
+                output_heatmap_path=heatmap_path,
+                output_annotated_path=annotated_path
+            )
+        else:
+            inspector = get_inspector(conf=conf)
+            record = inspector.inspect_image(input_path, output_annotated_path=annotated_path)
 
         response_payload = {
             "job_id": job_id,
             "filename": file.filename,
-            "status": vision_record["status"],
-            "defects_found": vision_record["defects_found"],
-            "inference_ms": vision_record["inference_ms"],
-            "fps": round(1000.0 / max(1.0, vision_record["inference_ms"]), 2),
-            "detections": vision_record["detections"],
+            "domain": domain,
+            "mode": mode,
+            "status": record["status"],
+            "defects_found": record["defects_found"],
+            "inference_ms": record["inference_ms"],
+            "fps": round(1000.0 / max(1.0, record["inference_ms"]), 2),
+            "detections": record.get("detections", []),
             "annotated_image_url": f"/api/v1/jobs/{job_id}/annotated",
         }
 
         if include_advisory:
             advisor = get_advisor()
-            advisory_report = advisor.generate_advisory(vision_record)
+            advisory_report = advisor.generate_advisory(record, domain=domain)
             response_payload["advisory"] = advisory_report
+
+            # Log to production audit trail
+            logger = get_logger()
+            primary_d = "None"
+            if record.get("detections"):
+                first = record["detections"][0]
+                primary_d = first.get("class_name", first.get("type", "Surface Anomaly"))
+
+            logger.log_inspection(
+                inspection_id=job_id,
+                application_domain=domain,
+                part_name=file.filename,
+                status=record["status"],
+                defects_count=record["defects_found"],
+                inference_ms=record["inference_ms"],
+                primary_defect=primary_d,
+                severity=advisory_report.get("severity", "NORMAL"),
+                disposition=advisory_report.get("disposition", "ACCEPT"),
+                anomaly_score=record.get("anomaly_score", 0.0),
+                detections=record.get("detections", [])
+            )
 
         return response_payload
 
     finally:
-        # Clean up input temporary image
         if input_path.exists():
             input_path.unlink()
 
 
-@app.post("/api/v1/inspect/annotated", tags=["Inspection"])
-def inspect_and_return_image(
-    file: UploadFile = File(..., description="PCB image file"),
-    conf: float = Query(0.25, ge=0.05, le=0.95),
-):
-    """Inspect PCB image and stream back the visually annotated JPEG."""
-    try:
-        contents = file.file.read()
-        pil_img = Image.open(io.BytesIO(contents))
-        if pil_img.mode != "RGB":
-            pil_img = pil_img.convert("RGB")
-    except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid image: {exc}")
+@app.get("/api/v1/logs", tags=["Quality Logging"])
+def get_inspection_logs(limit: int = 20) -> Dict[str, Any]:
+    """Retrieve factory yield summary metrics and recent inspection audit records."""
+    logger = get_logger()
+    metrics = logger.get_summary_metrics()
+    recent = logger.get_recent_records(limit=limit)
+    return {
+        "metrics": metrics,
+        "recent_inspections": recent
+    }
 
-    temp_dir = PROJECT_ROOT / "reports" / "api_temp"
-    temp_dir.mkdir(parents=True, exist_ok=True)
-    job_id = uuid.uuid4().hex[:12]
-    input_path = temp_dir / f"req_{job_id}.jpg"
-    annotated_path = temp_dir / f"ann_{job_id}.jpg"
 
-    try:
-        pil_img.save(input_path, format="JPEG", quality=95)
-        inspector = get_inspector(conf=conf)
-        inspector.inspect_image(input_path, output_annotated_path=annotated_path)
+@app.get("/api/v1/hailo", tags=["Edge Hardware"])
+def get_hailo_acceleration_profile() -> Dict[str, Any]:
+    """Retrieve Hailo-8 / Hailo-8L NPU edge profile and benchmarks for Raspberry Pi 5."""
+    engine = get_hailo_engine()
+    return {
+        "device": engine.get_device_info(),
+        "benchmarks": engine.benchmark_pipeline()
+    }
 
-        return FileResponse(
-            path=str(annotated_path),
-            media_type="image/jpeg",
-            filename=f"annotated_{file.filename}.jpg"
-        )
-    finally:
-        if input_path.exists():
-            input_path.unlink()
+
+inspect_pcb_image = inspect_part_image
 
 
 @app.get("/api/v1/jobs/{job_id}/annotated", tags=["Inspection"])
