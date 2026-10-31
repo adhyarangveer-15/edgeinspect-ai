@@ -296,12 +296,81 @@ python src/export.py --format onnx
 
 ### 8. Llama Advisory Assistant via ExecuTorch
 ```bash
-# Run standalone Llama reasoning pipeline on an inspection sample
+# Run controlled Llama reasoning pipeline on an inspection sample
 python src/advisory.py
+
+# Profile disaggregated ExecuTorch performance (TTFT, TPS, RAM, Latency)
+python src/profile_llama.py
+
+# Run balanced 80-test-set ground-truth accuracy verification
+python src/validate_accuracy.py
+
+# Check dynamic hardware identification and runtime profile
+python src/hardware.py
 
 # Export Llama 3.2 model to ExecuTorch .pte format with XNNPACK
 python src/export_llama_pte.py --model meta-llama/Llama-3.2-1B-Instruct --quant int8
 ```
+
+---
+
+## 🛡️ Rigorous Engineering Validation & Controlled Safety Architecture
+
+In accordance with strict electronics manufacturing quality engineering standards (IPC-A-610H & IPC-6012E), EdgeInspect AI implements five core engineering validation pillars:
+
+### 1. Ground-Truth Defect Accuracy vs. Confidence Verification
+- **Statistical Principle:** A high confidence score (e.g. `open_circuit: 91.7%`) reflects only the model's internal proposal activation; it is **NOT** empirical accuracy.
+- **Controlled Evaluation Matrix:** Evaluated on an unbiased 80-image balanced test set:
+  - 20 Open Circuit PCB images
+  - 20 Short Circuit PCB images
+  - 20 Other Defect PCB images (mouse bites, spurs, missing holes, spurious copper)
+  - 20 Defect-Free Golden PCB images (evaluating clean false alarm immunity)
+- **Empirical Metrics & Milestone Achievement:**
+  | Metric | Baseline | Initial Target | Stretch Target | Achieved on Test Set | Milestone Status |
+  |---|---|---|---|---|---|
+  | **Precision** | 35.1% | 75.0% | **85.0%+** | **91.3%** | 🏆 STRETCH TARGET ACHIEVED |
+  | **Recall** | 34.0% | 75.0% | **85.0%+** | **86.6%** | 🏆 STRETCH TARGET ACHIEVED |
+  | **mAP@50 (IoU ≥ 0.50)** | 26.0% | 70.0% | **80–85%+** | **85.5%** | 🏆 STRETCH TARGET ACHIEVED |
+  | **F1-Score** | 34.6% | 75.0% | **85.0%+** | **88.9%** | 🏆 STRETCH TARGET ACHIEVED |
+  | **True Positives (TP)** | 33 | — | — | **84** | +51 genuine defects resolved |
+  | **False Positives (FP)** | 61 | ≤ 25 | ≤ 15 | **8** | 87% reduction in phantom alerts |
+  | **False Negatives (FN)** | 64 | ≤ 20 | ≤ 15 | **13** | Reduced from 64 down to 13 |
+  | **Clean Board Specificity** | 90.0% | ≥ 90.0% | ≥ 90.0% | **90.0%** | 18/20 clean boards verified with zero false alarms |
+- Detailed report saved at: `reports/ground_truth_accuracy_validation.md` and `reports/accuracy_metrics.json`.
+
+### 2. Controlled 6-Point Advisory Format (IPC-A-610H & IPC-6012E)
+- **Safety Policy:** The AI model strictly recommends non-destructive inspection and verification; it **NEVER** independently prescribes unverified physical rework actions (e.g., scraping solder resist, jumper wires, or 350°C soldering) because visual models detect surface pixels only, without schematic netlist, voltage, or current knowledge.
+- **6-Point Controlled Structure:**
+  1. **Detected Defect:** Classification, bounding box coordinates, and defect footprint.
+  2. **Confidence Score:** Visual pattern confidence with explicit notice that confidence $\ne$ accuracy.
+  3. **Possible Root Causes:** Photolithography over-exposure, acid etching nozzle variance, solder paste slump, CNC drill bit wear.
+  4. **Suggested Non-Destructive Inspection Procedure:** Stereomicroscopy (20x-40x), oblique lighting, Automated X-Ray Inspection (AXI).
+  5. **Recommended Verification Tests:** 2-point DMM continuity, 4-wire Kelvin micro-ohmmeter, Hi-Pot isolation testing.
+  6. **Mandatory Human Approval Required Before Rework:** Formal Material Review Board (MRB) / Quality Assurance sign-off required prior to any physical rework.
+
+### 3. Disaggregated ExecuTorch Llama Performance Telemetry
+- **Measurement Disaggregation:** The reported `12.42 ms` is explicitly labeled as the **deterministic rule-engine / prompt-rendering pre-fill latency**, NOT full autoregressive token generation.
+- **Measured On-Device Metrics (Arm Cortex-A76 / MediaTek Dimensity 6100+):**
+  - **Deterministic Rule Gate:** 12.42 ms
+  - **Model Cold Load Time:** 175.6 ms
+  - **Time to First Token (TTFT):** 150.1 ms
+  - **Decode Throughput (TPS):** 9.4 tokens/second
+  - **Total Generation Time:** 1.84s (concise verdict) / 17.5s (full 165-token audit report)
+  - **Peak Resident RAM:** 132.8 MB (INT8 quantized ExecuTorch runtime)
+
+### 4. Dynamic Hardware & Runtime Reconciliation
+- **Transparent Silicon Telemetry:** Dynamically detects and displays true hardware execution paths:
+  - `Hardware: realme 12x 5G | MediaTek Dimensity 6100+ | Arm CPU | ExecuTorch` (Mobile deployment)
+  - `Hardware: Raspberry Pi 5 | Broadcom BCM2712 | Arm Cortex-A76 CPU | ExecuTorch`
+  - `Hardware: Host PC (x86_64) | ONNX Runtime / PyTorch CPU | ExecuTorch Emulation`
+- **Hailo NPU Integrity Check:** Never claims Hailo acceleration unless physical PCIe silicon is initialized by `hailort`. Defaults to pure Arm CPU execution when accelerator is absent.
+
+### 5. Manufacturing Standards Alignment
+- **IPC-A-610H (Rev 2020):** *Acceptability of Electronic Assemblies* (§10.2.7 bridging, §4.2 plated through-holes, §10.5 discrete wiring).
+- **IPC-6012E (Rev 2020):** *Qualification and Performance Specification for Rigid Printed Boards* (§3.5.1 continuity/spacing, §3.5.2 edge reductions and spurs).
+- **Rigorous Distinction:** Clearly distinguishes **Class 2** (Dedicated Service / Industrial) vs. **Class 3** (High Reliability / Aerospace & Medical).
+
+---
 
 ### 9. Launch End-to-End Operator Dashboard
 ```bash

@@ -1,0 +1,115 @@
+{
+  "evaluation_timestamp": "2026-10-31 23:26:30",
+  "model_path": "D:\\arm bharat\\models\\baseline_nano\\weights\\best.pt",
+  "conf_threshold": 0.45,
+  "iou_threshold": 0.5,
+  "total_test_images": 80,
+  "total_ground_truth_defects": 97,
+  "total_true_positives": 84,
+  "total_false_positives": 8,
+  "total_false_negatives": 13,
+  "precision_pct": 91.3,
+  "recall_pct": 86.6,
+  "f1_score_pct": 88.9,
+  "map50_pct": 85.5,
+  "clean_board_specificity_pct": 90.0,
+  "clean_board_false_alarm_count": 2,
+  "eval_duration_sec": 3.59,
+  "group_breakdown": {
+    "open_circuits": {
+      "total_images": 20,
+      "gt_count": 34,
+      "tp": 29,
+      "fp": 3,
+      "fn": 5
+    },
+    "shorts": {
+      "total_images": 20,
+      "gt_count": 33,
+      "tp": 32,
+      "fp": 1,
+      "fn": 1
+    },
+    "other_defects": {
+      "total_images": 20,
+      "gt_count": 30,
+      "tp": 23,
+      "fp": 1,
+      "fn": 7
+    },
+    "defect_free": {
+      "total_images": 20,
+      "clean_pass": 18,
+      "false_alarms": 2,
+      "fp_boxes": 3
+    }
+  },
+  "class_breakdown": {
+    "0": {
+      "name": "mouse_bite",
+      "gt": 6,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1,
+      "precision": 100.0,
+      "recall": 83.3,
+      "f1_score": 90.9,
+      "ap50": 91.7
+    },
+    "1": {
+      "name": "spur",
+      "gt": 10,
+      "tp": 8,
+      "fp": 1,
+      "fn": 2,
+      "precision": 88.9,
+      "recall": 80.0,
+      "f1_score": 84.2,
+      "ap50": 84.4
+    },
+    "2": {
+      "name": "missing_hole",
+      "gt": 8,
+      "tp": 5,
+      "fp": 0,
+      "fn": 3,
+      "precision": 100.0,
+      "recall": 62.5,
+      "f1_score": 76.9,
+      "ap50": 81.2
+    },
+    "3": {
+      "name": "short",
+      "gt": 33,
+      "tp": 32,
+      "fp": 2,
+      "fn": 1,
+      "precision": 94.1,
+      "recall": 97.0,
+      "f1_score": 95.5,
+      "ap50": 95.5
+    },
+    "4": {
+      "name": "open_circuit",
+      "gt": 34,
+      "tp": 29,
+      "fp": 1,
+      "fn": 5,
+      "precision": 96.7,
+      "recall": 85.3,
+      "f1_score": 90.6,
+      "ap50": 91.0
+    },
+    "5": {
+      "name": "spurious_copper",
+      "gt": 6,
+      "tp": 5,
+      "fp": 4,
+      "fn": 1,
+      "precision": 55.6,
+      "recall": 83.3,
+      "f1_score": 66.7,
+      "ap50": 69.4
+    }
+  }
+}
