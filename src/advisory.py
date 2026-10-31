@@ -185,7 +185,7 @@ class LlamaQualityAdvisor:
         )
         return prompt
 
-    def generate_advisory(self, inspection_record: Dict[str, Any], domain: str = "pcb") -> Dict[str, Any]:
+    def generate_advisory(self, inspection_record: Dict[str, Any], domain: str = "pcb", **kwargs) -> Dict[str, Any]:
         """
         Generates an evidence-grounded advisory report across any industrial application domain.
         Supported domains: 'pcb', 'steel_metal', 'textile_fabric', 'packaging', 'automotive', 'pharma'.
