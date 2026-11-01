@@ -1,0 +1,1 @@
+# EdgeInspect AI app package

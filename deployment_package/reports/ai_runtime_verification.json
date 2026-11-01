@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-11-01 10:32:32",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "python_version": "3.11.15",
+  "runtimes": {
+    "vision_model": {
+      "framework": "Ultralytics YOLOv8 / PyTorch & ONNX Runtime",
+      "weights_file": "D:\\arm bharat\\models\\baseline_nano\\weights\\best.pt",
+      "weights_size_mb": 6.21,
+      "onnx_export_file": "D:\\arm bharat\\models\\baseline_nano\\weights\\best.onnx",
+      "onnx_export_size_mb": 12.19,
+      "onnxruntime_available": true,
+      "onnxruntime_version": "1.31.1",
+      "sample_input_tested": "eval_01_open_circuit_l_light_01_open_circuit_02_1_600.jpg",
+      "measured_latency_ms": 3096.41,
+      "defects_detected": 1,
+      "verification_status": "PASSED (Live Inference Verified)"
+    },
+    "executorch_llama": {
+      "engine_identifier": "ExecuTorch Llama-3.2-1B (realme 12x 5G | MediaTek Dimensity 6100+ | Arm CPU | ExecuTorch)",
+      "hardware_profile": "realme 12x 5G | MediaTek Dimensity 6100+ | Arm CPU | ExecuTorch",
+      "executorch_package_installed": true,
+      "executorch_exir_available": true,
+      "executorch_cpp_portable_runtime": true,
+      "pte_program_path": "D:\\arm bharat\\models\\llama\\llama_advisory_gate.pte",
+      "pte_program_size_bytes": 1704,
+      "pte_loaded_in_executorch_runtime": true,
+      "rule_gate_latency_ms": 93.94,
+      "time_to_first_token_ms": 150.1,
+      "tokens_per_second": 9.4,
+      "total_generation_time_ms": 17703.3,
+      "model_loading_ms": 175.6,
+      "peak_ram_footprint_mb": 533.9,
+      "verification_status": "PASSED (ExecuTorch Runtime & EXIR Live Execution Verified)"
+    }
+  },
+  "hardware_status": {
+    "active_profile": "realme 12x 5G | MediaTek Dimensity 6100+ | Arm CPU | ExecuTorch",
+    "physical_hailo_detected": false,
+    "hailo_status_label": "PHYSICAL NPU ABSENT (CPU FALLBACK)",
+    "truthful_reporting": "Physical PCIe presence strictly checked; fallback to Arm/Host CPU verified."
+  }
+}

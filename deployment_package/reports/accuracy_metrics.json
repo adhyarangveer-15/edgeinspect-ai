@@ -1,0 +1,837 @@
+{
+  "evaluation_timestamp": "2026-11-01 10:35:11",
+  "model_path": "D:\\arm bharat\\models\\baseline_nano\\weights\\best.pt",
+  "conf_threshold": 0.45,
+  "iou_threshold": 0.5,
+  "total_test_images": 80,
+  "total_ground_truth_defects": 101,
+  "total_true_positives": 87,
+  "total_false_positives": 8,
+  "total_false_negatives": 14,
+  "precision_pct": 91.6,
+  "recall_pct": 86.1,
+  "f1_score_pct": 88.8,
+  "map50_pct": 85.4,
+  "clean_board_specificity_pct": 90.0,
+  "clean_board_false_alarm_count": 2,
+  "eval_duration_sec": 6.19,
+  "group_breakdown": {
+    "open_circuits": {
+      "total_images": 20,
+      "gt_count": 34,
+      "tp": 29,
+      "fp": 3,
+      "fn": 5
+    },
+    "shorts": {
+      "total_images": 20,
+      "gt_count": 37,
+      "tp": 35,
+      "fp": 1,
+      "fn": 2
+    },
+    "other_defects": {
+      "total_images": 20,
+      "gt_count": 30,
+      "tp": 23,
+      "fp": 1,
+      "fn": 7
+    },
+    "defect_free": {
+      "total_images": 20,
+      "clean_pass": 18,
+      "false_alarms": 2,
+      "fp_boxes": 3
+    }
+  },
+  "class_breakdown": {
+    "0": {
+      "name": "mouse_bite",
+      "gt": 6,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1,
+      "precision": 100.0,
+      "recall": 83.3,
+      "f1_score": 90.9,
+      "ap50": 91.7
+    },
+    "1": {
+      "name": "spur",
+      "gt": 10,
+      "tp": 8,
+      "fp": 1,
+      "fn": 2,
+      "precision": 88.9,
+      "recall": 80.0,
+      "f1_score": 84.2,
+      "ap50": 84.4
+    },
+    "2": {
+      "name": "missing_hole",
+      "gt": 8,
+      "tp": 5,
+      "fp": 0,
+      "fn": 3,
+      "precision": 100.0,
+      "recall": 62.5,
+      "f1_score": 76.9,
+      "ap50": 81.2
+    },
+    "3": {
+      "name": "short",
+      "gt": 37,
+      "tp": 35,
+      "fp": 2,
+      "fn": 2,
+      "precision": 94.6,
+      "recall": 94.6,
+      "f1_score": 94.6,
+      "ap50": 94.6
+    },
+    "4": {
+      "name": "open_circuit",
+      "gt": 34,
+      "tp": 29,
+      "fp": 1,
+      "fn": 5,
+      "precision": 96.7,
+      "recall": 85.3,
+      "f1_score": 90.6,
+      "ap50": 91.0
+    },
+    "5": {
+      "name": "spurious_copper",
+      "gt": 6,
+      "tp": 5,
+      "fp": 4,
+      "fn": 1,
+      "precision": 55.6,
+      "recall": 83.3,
+      "f1_score": 66.7,
+      "ap50": 69.4
+    }
+  },
+  "per_image_results": [
+    {
+      "image": "eval_01_open_circuit_l_light_01_open_circuit_02_1_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_02_open_circuit_l_light_01_open_circuit_13_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_03_open_circuit_l_light_04_open_circuit_01_1_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_04_open_circuit_l_light_04_open_circuit_03_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_05_open_circuit_l_light_04_open_circuit_05_4_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_06_open_circuit_l_light_04_open_circuit_07_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_07_open_circuit_l_light_04_open_circuit_08_1_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_08_open_circuit_l_light_04_open_circuit_09_1_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_09_open_circuit_l_light_04_open_circuit_10_3_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_10_open_circuit_l_light_04_open_circuit_12_1_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_11_open_circuit_l_light_05_open_circuit_01_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_12_open_circuit_l_light_05_open_circuit_06_1_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_13_open_circuit_l_light_06_open_circuit_08_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 3,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 2
+    },
+    {
+      "image": "eval_14_open_circuit_l_light_07_open_circuit_05_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_15_open_circuit_l_light_08_open_circuit_01_3_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 3,
+      "tp": 2,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "eval_16_open_circuit_l_light_08_open_circuit_02_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 3,
+      "predicted_count": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_17_open_circuit_l_light_08_open_circuit_02_4_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 3,
+      "tp": 2,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "eval_18_open_circuit_l_light_08_open_circuit_03_1_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_19_open_circuit_l_light_08_open_circuit_04_5_600",
+      "group": "open_circuits",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_20_open_circuit_l_light_08_open_circuit_05_2_600",
+      "group": "open_circuits",
+      "ground_truth_count": 2,
+      "predicted_count": 3,
+      "tp": 2,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "eval_21_short_l_light_01_short_03_1_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_22_short_l_light_01_short_06_3_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_23_short_l_light_01_short_10_2_600",
+      "group": "shorts",
+      "ground_truth_count": 3,
+      "predicted_count": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_24_short_l_light_01_short_10_1_600",
+      "group": "shorts",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_25_short_l_light_01_short_09_2_600",
+      "group": "shorts",
+      "ground_truth_count": 4,
+      "predicted_count": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_26_short_l_light_01_short_14_1_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_27_short_l_light_01_short_20_3_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_28_short_l_light_04_short_04_2_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_29_short_l_light_04_short_07_2_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_30_short_l_light_04_short_08_1_600",
+      "group": "shorts",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_31_short_l_light_04_short_10_2_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_32_short_l_light_04_short_11_3_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_33_short_l_light_04_short_11_4_600",
+      "group": "shorts",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_34_short_l_light_04_short_12_2_600",
+      "group": "shorts",
+      "ground_truth_count": 3,
+      "predicted_count": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_35_short_l_light_04_short_13_1_600",
+      "group": "shorts",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_36_short_l_light_04_short_14_2_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_37_short_l_light_04_short_15_1_600",
+      "group": "shorts",
+      "ground_truth_count": 3,
+      "predicted_count": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_38_short_l_light_04_short_16_4_600",
+      "group": "shorts",
+      "ground_truth_count": 1,
+      "predicted_count": 2,
+      "tp": 1,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "eval_39_short_l_light_04_short_20_5_600",
+      "group": "shorts",
+      "ground_truth_count": 3,
+      "predicted_count": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_40_short_l_light_05_short_05_2_600",
+      "group": "shorts",
+      "ground_truth_count": 3,
+      "predicted_count": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_41_mouse_bite_l_light_01_mouse_bite_02_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_42_mouse_bite_l_light_01_mouse_bite_05_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_43_mouse_bite_l_light_01_mouse_bite_07_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_44_mouse_bite_l_light_01_mouse_bite_07_3_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_45_mouse_bite_l_light_04_mouse_bite_03_1_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_46_spur_l_light_01_spur_02_1_600",
+      "group": "other_defects",
+      "ground_truth_count": 3,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_47_spur_l_light_01_spur_17_3_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_48_spur_l_light_01_spur_20_1_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_49_spur_l_light_04_spur_02_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_50_spur_l_light_04_spur_05_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 3,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_51_missing_hole_l_light_01_missing_hole_04_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 2,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 1
+    },
+    {
+      "image": "eval_52_missing_hole_l_light_01_missing_hole_07_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_53_missing_hole_l_light_01_missing_hole_08_1_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_54_missing_hole_l_light_01_missing_hole_10_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 2,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2
+    },
+    {
+      "image": "eval_55_missing_hole_l_light_01_missing_hole_14_4_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_56_spurious_copper_l_light_01_spurious_copper_06_2_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_57_spurious_copper_l_light_01_spurious_copper_09_1_600",
+      "group": "other_defects",
+      "ground_truth_count": 2,
+      "predicted_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_58_spurious_copper_l_light_01_spurious_copper_14_1_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 0,
+      "fp": 1,
+      "fn": 1
+    },
+    {
+      "image": "eval_59_spurious_copper_l_light_01_spurious_copper_16_3_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_60_spurious_copper_l_light_04_spurious_copper_02_3_600",
+      "group": "other_defects",
+      "ground_truth_count": 1,
+      "predicted_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_61_defect_free_l_light_01_missing_hole_18_1_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_62_defect_free_l_light_01_missing_hole_18_3_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_63_defect_free_l_light_04_missing_hole_08_4_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_64_defect_free_l_light_04_missing_hole_13_1_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_65_defect_free_l_light_04_missing_hole_15_3_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_66_defect_free_l_light_04_missing_hole_17_1_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_67_defect_free_l_light_04_mouse_bite_05_3_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 1,
+      "tp": 0,
+      "fp": 1,
+      "fn": 0
+    },
+    {
+      "image": "eval_68_defect_free_l_light_04_mouse_bite_11_3_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_69_defect_free_l_light_04_mouse_bite_13_2_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_70_defect_free_l_light_04_mouse_bite_16_2_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_71_defect_free_l_light_04_mouse_bite_18_5_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 2,
+      "tp": 0,
+      "fp": 2,
+      "fn": 0
+    },
+    {
+      "image": "eval_72_defect_free_l_light_04_mouse_bite_19_2_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_73_defect_free_l_light_04_mouse_bite_20_4_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_74_defect_free_l_light_04_spur_08_3_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_75_defect_free_l_light_04_spur_15_1_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_76_defect_free_l_light_04_spur_20_4_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_77_defect_free_l_light_04_spurious_copper_04_4_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_78_defect_free_l_light_04_spurious_copper_05_1_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_79_defect_free_l_light_04_spurious_copper_06_1_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "image": "eval_80_defect_free_l_light_04_spurious_copper_07_1_600",
+      "group": "defect_free",
+      "ground_truth_count": 0,
+      "predicted_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    }
+  ]
+}
